@@ -1,56 +1,44 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import baumwelchmultinew
-import baumwelchnewmodel
+"""
+Created on Sun Sep 16 22:35:57 2019
+
+@author: mayuheng
+"""
+from baumwelch import *
 import numpy as np
 import csv
 import pandas as pd
 from scipy.interpolate import UnivariateSpline
 
-
-def encode(x, code,multiple):
-    if multiple>1:   
-        length=np.max([len(x[i]) for i in range(0,len(x))])
-        output=np.zeros((len(x),length))
-        output.dtype=int
-        for i in range(0,len(x)):
-            for j in range(0,length):
-                if len(x[i])<=j:
-                    output[i,j]= -1
-                else:
-                    output[i,j]=int(np.where(np.array(code) == x[i][j])[0])
-    else :
-        output = np.array([int(np.where(code == x[i])[0]) for i in range(0,len(x))])
+#is this for memory efficiency?
+''''''
+def encode(x, code):
+    output = np.array([int(np.where(code == x[i])[0]) for i in range(0,len(x))])
+    return output
+def decode(x,code):
+    output = np.zeros(len(x)) 
+    for i in range(0, len(x)): 
+        output[i] = code[x[i]]
     return output
 
-def decode(x,code,multiple):
-    if multiple>1:
-        output = np.zeros(len(x))
-        output.dtype=int
-        for i in range(0, len(x)): 
-            output[i] = code[x[i]]
-    else:
-        output = np.zeros(len(x)) 
-        for i in range(0, len(x)): 
-            output[i] = code[x[i]]
-    return output
-
-def generate(n,pi,b0,b,A,code): 
+def generate(n,pi,b,A,code): 
     m = A.shape[0]
-    k = b.shape[2]
+    k = b.shape[1]
     ostates=range(0,k)
     xstates=range(0,m)
     o=np.zeros(n,dtype=int)
     x=np.zeros(n,dtype=int)
     x[0]=np.random.choice(xstates,p=pi)
-    o[0]=np.random.choice(ostates,p=b0[x[0],:])
     for j in range(1,n):
         x[j]=np.random.choice(xstates,p=A[x[j-1],:])
-    for j in range(1,n):
-        o[j]=np.random.choice(ostates,p=b[x[j-1],x[j],:])
-    output=decode(o,code,1)
+    for j in range(0,n):
+        o[j]=np.random.choice(ostates,p=b[x[j],:])
+    output=decode(o,code)
     return (output,x)
     
+#cant understand, sorry for just copying
+
 def find_nearest(array,value):
     idx = (np.abs(array-value)).argmin() 
     return array[idx]
@@ -106,23 +94,16 @@ def find_vel(newNotes, velocity):
     
 
 #m is the number of hidden states type
-def hmmnewcompose(input_filename,output_filename,min_note,m,tol,multiple):
+def hmmcompose(input_filename,output_filename,min_note,m,tol):
     quarter_note, num, denom, key, measures, time, notes, velocity, song, ind = pre_process(input_filename, min_note).read_process()
-    possibleNotes=[]
-    if multiple>1:
-        for i in range(0,len(notes)):
-            possibleNotes=np.unique(list(possibleNotes)+notes[i])
-        k=len(possibleNotes)
-        xNotes=encode(notes,possibleNotes,multiple)
-        n=np.max(len(xNotes[i]) for i in range(0,len(xNotes)))
-        A,b0,b,pi=baumwelchmultinew.optimize(n,m,k,multiple,xNotes,tol)
-    else:
-        possibleNotes=np.unique(notes)
-        k=len(possibleNotes)
-        xNotes=encode(notes,possibleNotes,multiple)
-        n=len(xNotes)
-        pi,b0,b,A=baumwelchnewmodel.optimize(n,m,k,xNotes,tol)
-    newNotes,z=generate(n,pi,b0,b,A,code=possibleNotes)
+    #why only old notes and velocity?
+    ''''''
+    possibleNotes=np.unique(notes)
+    k=len(possibleNotes)
+    xNotes=encode(notes,possibleNotes)
+    n=len(xNotes)
+    iteration,p,pi,b,A=optimize(n,m,k,xNotes,tol)
+    newNotes,z=generate(n,pi,b,A,code=possibleNotes)
     newVelocities=find_vel(newNotes,velocity)
     
     song.iloc[ind, 1] = time

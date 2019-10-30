@@ -61,9 +61,8 @@ def suboptimize(n, m, k, x, tol):
     b = np.random.rand(m,m,k)
     bdenorm=np.zeros((m,m,k))
     bnumer=np.zeros((m,m,k))
-    
     A = np.log(A/np.sum(A, axis=1)[:,None])
-    b = np.log(b/np.sum(b, axis=1)[:,None])
+    b = np.log(b/np.sum(b, axis=(0,1))[None,None,:])
     b0=np.log(b0)
     #Stop iterations when log(p(x_1:n)) differs by tol between iterations#
     while convergence == 0:
@@ -88,7 +87,7 @@ def suboptimize(n, m, k, x, tol):
             for j in range(0, m):
                 Anumer[i,j] = logSumExp(xi[1::, i, j]) 
                 Adenorm[i,j]=logSumExp(xi[1::, i,:])
-                A[i,j]=Adenorm[i,j]-Anumer[i,j]
+                A[i,j]=Anumer[i,j]-Adenorm[i,j]
         for i in range(0,m):
             for j in range(0,m):
                 for w in range(0, k):
@@ -104,9 +103,10 @@ def suboptimize(n, m, k, x, tol):
                             h = h+1
                     bnumer[i,j,w]=logSumExp(indicies)
                     bdenorm[i,j,w]=logSumExp(xi[1::,i,j])
-                    b[i,j,w] = bdenorm[i,j,w]-bnumer[i,j,w]
+                    b[i,j,w] = bnumer[i,j,w]-bdenorm[i,j,w]
             
         criteria = abs(pOld-pNew)
+        print("iteration",iterations,"loss",criteria/tol)
         if criteria < tol:
             convergence = 1
         elif iterations > 500:
@@ -124,14 +124,13 @@ def optimize(n, m, k, K, x, tol):
     temp=[0]*K
     for i in range(0,K):
         for j in range(0,n):
-            if x[i,j]<0:
-                temp[i]=x[i,0:j]
+            if x[i,j]<=0:
+                temp[i]=[x[i,j] for j in range(0,j)]
                 length[i]=j
                 break
             if j==n-1:
-                temp[i]=x[i]
+                temp[i]=[x[i,j] for j in range(0,n)]
                 length[i]=j+1
-        
     x=temp
     A=np.zeros((2,K,m,m))
     rA=np.zeros((m,m))
@@ -142,6 +141,7 @@ def optimize(n, m, k, K, x, tol):
     b0=np.zeros((K,m,k))
     rb0=np.zeros((m,k))
     for i in range(0,K):
+        print("This is",i+1,"th composing")
         pi[i],b0[i],b[0,i],b[1,i],A[0,i],A[1,i]=suboptimize(length[i], m, k, x[i], tol)
     for i in range(0,m):
         for j in range(0,m):

@@ -30,7 +30,7 @@ def hmmnewcompose(notes,m,tol,multiple,cut=0):
     else:
         possibleNotes=np.unique(notes)
         k=len(possibleNotes)
-        n=len(xNotes)
+        n=len(notes)
         pi,b0,b,A=baumwelchnewmodel.optimize(n,m,k,notes,tol)
     return(A,b0,b,pi)
     

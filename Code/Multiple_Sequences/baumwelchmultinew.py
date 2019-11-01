@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-#multiple input
-#new model
-##using log trick
-#notations are used as in tutorial
-#n is length of music
-#m is number of different hidden states
-#pi is initial distribution
-#A is transition matrix
-#b is emission matrix
-#x is the input matrix of notes
-#k is the number of possible notes
-#K is the number of input
+'''
+multiple inputs for new model
+using log trick
+A and pi are transition matrix and innitial distribution
+b and b0 are emission distribution and innitial emission distribution
+generally n represents length of a piece
+m represents number of hidden states
+k represents number of unique notes
+K represents number of input pieces
+x is the input matrix of notes
+'''
 import numpy as np
+
+# function for log addition#
 def logSumExp(a):
     if np.all(np.isinf(a)):
         return np.log(0)
@@ -23,6 +23,7 @@ def logSumExp(a):
         b = np.max(a)
         return(b + np.log(np.sum(np.exp(a-b))))
 
+# forward and backward algorithm using given parameters#
 def forward(n, m, pi, A, b,b0, x):
     alpha = np.zeros((n,m))
     for i in range(0,m):
@@ -32,41 +33,55 @@ def forward(n, m, pi, A, b,b0, x):
         for j in range(0, m):
             alpha[i,j] = logSumExp(np.asarray(alpha[i-1, :])+np.asarray(A[:,j])+b[:,j,x[i]])
     return(alpha)
+    
 def backward(n, m, pi, A, b, x):
     beta = np.zeros((n,m))
     for t in range(n-2, -1, -1):
         for i in range(0, m):
             beta[t,i] = logSumExp(np.asarray(beta[t+1,: ]) + np.asarray(A[i,:]) + b[i,:, x[t+1]])
     return(beta)
-    
-#for each single input#
+
+# tol is the tolerance of iteration error#
+# perform optimize for single pieces#
+# returning pi, b0#
+# returning matrix of numerator and denominator of b, as to take average separately and devide#
+# returning matrix of numerator and denominator of b, as to take average separately and devide#
 def suboptimize(n, m, k, x, tol):
-    #randomly initialize A, b and pi
-    #x here is a just one piece
+    #innitializing 
     pi = np.random.rand(m)
-    pi = np.log(pi/np.sum(pi))
-    b0=np.zeros((m,k))
+    #setting all parameters in b0 to possitive to avoid#
+    #limited renewal for innitial emission distribution#
+    b0=np.full((m,k),1E-2)
     for i in range(0,m):
         b0[i,x[0]]=1
+        b0[i] = b0[i]/np.sum(b0[i])
+    A=np.random.rand(m,m)   
+    b = np.random.rand(m,m,k)
+    # trasition expectations#
     gamma = np.zeros((n,m))
     xi = np.zeros((n,m,m))
+    # other parameters used for iteration#
+    # iterations counts iteration times#
+    # convergence decide whether reached convergence condition#
+    # count is used for computing b#
+    # pOld and pNew represent p(x_1:n)#
     iterations = 0
     convergence = 0
     count = 0
     pOld = 1E10
     pNew = 0
-    A=np.random.rand(m,m)
+    # to store denominator and numerator of A and b#
     Adenorm=np.zeros((m,m))
     Anumer=np.zeros((m,m))
-    b = np.random.rand(m,m,k)
     bdenorm=np.zeros((m,m,k))
     bnumer=np.zeros((m,m,k))
     A = np.log(A/np.sum(A, axis=1)[:,None])
     b = np.log(b/np.sum(b, axis=(0,1))[None,None,:])
     b0=np.log(b0)
+    pi = np.log(pi/np.sum(pi))
     #Stop iterations when log(p(x_1:n)) differs by tol between iterations#
     while convergence == 0:
-        #Perform forward and backward algorithms# 
+        #Perform forward and backward algorithms#
         alpha=forward(n,m,pi,A,b,b0,x)
         beta=backward(n,m,pi,A,b,x)
         pNew = logSumExp(alpha[len(x)-1,:])
@@ -104,9 +119,9 @@ def suboptimize(n, m, k, x, tol):
                     bnumer[i,j,w]=logSumExp(indicies)
                     bdenorm[i,j,w]=logSumExp(xi[1::,i,j])
                     b[i,j,w] = bnumer[i,j,w]-bdenorm[i,j,w]
-            
+        # decide convergence# 
         criteria = abs(pOld-pNew)
-        print("iteration",iterations,"loss",criteria/tol)
+        print("iteration",iterations,"difference",criteria/tol,"pnew",pNew)
         if criteria < tol:
             convergence = 1
         elif iterations > 500:
@@ -117,21 +132,26 @@ def suboptimize(n, m, k, x, tol):
             iterations +=1
     return (pi,b0, bdenorm,bnumer, Adenorm,Anumer)
 
+# tol is the tolerance of iteration error#
+# perform optimize for multiple sequence using suboptimize#
+# input is matrix with one piece in each row and keys to be nonnegative integers#
+# returning optimized parameters#
 def optimize(n, m, k, K, x, tol):
-    #x here is a list of K pieces, x[K,n] is the last index
+    # get single sequence to proper length#
     length=[0]*K
-    #store the length
     temp=[0]*K
     for i in range(0,K):
         for j in range(0,n):
-            if x[i,j]<=0:
-                temp[i]=[x[i,j] for j in range(0,j)]
+            if x[i,j]<0:
+                temp[i]=[x[i,l] for l in range(0,j)]
                 length[i]=j
                 break
             if j==n-1:
-                temp[i]=[x[i,j] for j in range(0,n)]
+                temp[i]=[x[i,l] for l in range(0,n)]
                 length[i]=j+1
     x=temp
+    # A,b,pi and b0 store the result from suboptimize#
+    # rA, rb, rb0 and rpi are final result#
     A=np.zeros((2,K,m,m))
     rA=np.zeros((m,m))
     b=np.zeros((2,K,m,m,k))
@@ -143,6 +163,7 @@ def optimize(n, m, k, K, x, tol):
     for i in range(0,K):
         print("This is",i+1,"th composing")
         pi[i],b0[i],b[0,i],b[1,i],A[0,i],A[1,i]=suboptimize(length[i], m, k, x[i], tol)
+    # take average and divide#
     for i in range(0,m):
         for j in range(0,m):
             rA[i,j]=logSumExp(A[1,:,i,j])-logSumExp(A[0,:,i,j])

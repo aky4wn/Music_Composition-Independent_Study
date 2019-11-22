@@ -1,0 +1,9 @@
+\contentsline {section}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {2}Data and Processing}{1}
+\contentsline {section}{\numberline {3}Model}{1}
+\contentsline {section}{\numberline {4}Results}{2}
+\contentsline {section}{\numberline {5}Conclusion}{2}
+\contentsline {subsection}{\numberline {5.1}Fri, Sept 6: Phenomenology of Microscopic Physics}{2}
+\contentsline {subsection}{\numberline {5.2}Mon, Sept 9: Review of Newtonian Mechanics}{2}
+\contentsline {subsection}{\numberline {5.3}Tue, Sept 10: Alternative Formulations of Newtonian Mechanics}{3}
+\contentsline {section}{\numberline {6}Spring 2020}{3}

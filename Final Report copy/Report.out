@@ -1,0 +1,13 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Data\040and\040Processing}{}% 2
+\BOOKMARK [1][-]{section.3}{Model}{}% 3
+\BOOKMARK [1][-]{section.4}{Result}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{Evaluation\040Metrics\040}{section.4}% 5
+\BOOKMARK [2][-]{subsection.4.2}{Dilated\040Convolution\040Single\040Input}{section.4}% 6
+\BOOKMARK [2][-]{subsection.4.3}{Dilated\040Convolution\040Multiple\040Input}{section.4}% 7
+\BOOKMARK [1][-]{section.5}{Conclusion\040and\040Future\040Work}{}% 8
+\BOOKMARK [1][-]{appendix.A}{Musical\040Resource}{}% 9
+\BOOKMARK [1][-]{appendix.B}{Baum-welch\040for\040Dilated\040Model}{}% 10
+\BOOKMARK [2][-]{subsection.B.1}{Expectation}{appendix.B}% 11
+\BOOKMARK [2][-]{subsection.B.2}{Maximization}{appendix.B}% 12
+\BOOKMARK [1][-]{appendix.C}{Baum-welch\040for\040Multiple\040Input}{}% 13

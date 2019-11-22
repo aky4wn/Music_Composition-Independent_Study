@@ -1,0 +1,61 @@
+\begin{thebibliography}{10}
+
+\bibitem{magenta}
+Google magenta.
+\newblock \url{https://magenta.tensorflow.org}.
+
+\bibitem{midiwiki}
+Midi.
+\newblock \url{https://en.wikipedia.org/wiki/MIDI}.
+
+\bibitem{midicsv}
+Midicsv.
+\newblock \url{https://www.fourmilab.ch/webtools/midicsv/}, January 2008.
+
+\bibitem{annagithub}
+Pre-process github.
+\newblock
+  \url{https://github.com/aky4wn/Classical-Music-Composition-Using-State-Space-Models},
+  Aug. 2018.
+
+\bibitem{algorithmiccomposition}
+Adam Alpern.
+\newblock Techniques for algorithmic composition of music.
+\newblock
+  \url{https://pdfs.semanticscholar.org/d701/dd6cdc82ed544422c553dab59426f759d558.pdf},
+  1995.
+
+\bibitem{farbood2001analysis}
+Mary Farbood and Bernd Sch{\"o}ner.
+\newblock Analysis and synthesis of palestrina-style counterpoint using markov
+  chains.
+\newblock In {\em ICMC}, 2001.
+
+\bibitem{AImethodsinalgorithmicomposing}
+Francisco~Vico Jose David~Fern{\'a}ndez.
+\newblock Ai methods in algorithmic composition: A comprehensive survey.
+\newblock {\em Journal of Artificial Intelligence Research}, 48:513--582, 2013.
+
+\bibitem{briefhistoryofac}
+John~A. Maurer.
+\newblock A brief history of algorithmic composition.
+\newblock \url{https://ccrma.stanford.edu/~blackrse/algorithm.html}, March
+  1999.
+
+\bibitem{tutorial}
+L.~R. Rabiner.
+\newblock A tutorial on hidden markov models and selected applications in
+  speech recognition.
+\newblock In {\em Proceedings of the IEEE}, volume~77, 1989.
+
+\bibitem{musicwebsite}
+Anna~K. Yanchenko.
+\newblock Music theory.
+\newblock \url{https://aky4wn.github.io/Classical-Music-Composition
+  -Using-State-Space-Models/}.
+
+\bibitem{yanchenko2017classical}
+Anna~K. Yanchenko and Sayan Mukherjee.
+\newblock Classical music composition using state space models, 2017.
+
+\end{thebibliography}

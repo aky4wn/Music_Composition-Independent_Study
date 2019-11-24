@@ -1,9 +1,23 @@
 # One Sequence Code
 
-- Briefly describe
+Code for model with single input
+ 
+## Original CSV
 
-## Comparison
+All the needed CSV input files
+
+## HMM-Comparison
+
+Main code from pre-process to comparision.
+
+## Baumwelch.py, Baumwelchnewmodel.py
+
+Baumwelch algorithm as a function
 
 ## Metrics
 
-## Generated Pieces
+Folder for metric computation files
+
+## New MIDI
+
+All generated pieces

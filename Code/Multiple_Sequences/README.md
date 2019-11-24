@@ -18,6 +18,10 @@ Baumwelch algorithm as a function, for first order and dilated convolution
 
 Trained parameters, saved for efficiency
 
+## Label Switching
+
+Codes and parameters for hidden states permutation issue
+
 ## Metrics
 
 Folder for metric computation files

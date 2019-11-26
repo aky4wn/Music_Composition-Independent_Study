@@ -168,7 +168,7 @@ From the table, we can see that the dilated convolution model generally does not
 \end{table}
 
 
-\newpage
+
 $\mathbf{Interpretation}$
 The hidden states have specific meanings representing the underlying dynamics of the piece. We can decompose the notes into single pitches and look at the emission matrix (the emission matrix of the dilated convolution model is three dimensional with entries $b_{ijk}=p(P_t=k|Z_{t-1}=i,Z_t=j)$ where $P_t$ is some pitch, so we fix the second index j). For instance, if a hidden state only has high emission distribution of (C) and (G), then the state catch the perfect fifth. As is shown in \hyperref[fig:inter]{Figure 2}, fixing $Z_{t-1}=0$, the hidden states 1 catches D3, 2 catches G chord, 3 catches Gmaj 7 and 4 catches A2. This means that the dilated convolution model is able to recover basic aspects of harmony, even though there is no prior harmonic musical knowledge imparted in the model.
 \begin{figure}[H]
